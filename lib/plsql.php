@@ -102,11 +102,13 @@
         
         private $name;
         private $scheme;
+        private $index;
         private $entries;
 
         function __construct($name, $scheme) {
             $this->name = $name;
             $this->scheme = $scheme;
+            $this->index = 0;
             $this->entries = array();
         }
 
@@ -132,11 +134,19 @@
         }
 
         function insert($object) {
-            $this->entries[] = new Entry($this->scheme, $object);
+            $this->entries[] = new Entry($this->scheme, $this->index, $object);
+            $this->index++;
         }
 
-        function update($index, $object) {
-            
+        function update($object) {
+            for ($i = 0; $i < count($this->entries); $i++) {
+                $instance = $this->entries[$i]->getInstance();
+                $objectId = ((array)$object)["id"];
+                if ($instance["id"] == $objectId) {
+                    $this->entries[$i] = new Entry($this->scheme, $objectId, $object);
+                    break;
+                }
+            }
         }
 
         function delete($condition) {
@@ -172,8 +182,10 @@
 
         private $instance;
 
-        function __construct($scheme, $object) {
-            $instance = array();
+        function __construct($scheme, $index, $object) {
+            $this->instance = array(
+                "id" => $index
+            );
             foreach ($scheme as $key => $value) {
                 $this->instance[$key] = ((array)$object)[$key];
             }

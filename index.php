@@ -15,21 +15,17 @@
         $plsql = new PLSQL();
         $database = $plsql->createDatabase('plsql-test');
         $sheme = array(
-            "id" => "int",
             "name" => "text"
         );
         $table = $database->createTable('users', $sheme);
 
         class User {
-            public $id;
             public $name;
         }
         $user = new User();
-        $user->id = 0;
         $user->name = "John";
 
         $user1 = array(
-            "id" => 0,
             "name" => "Marston"
         );
 
@@ -37,13 +33,16 @@
         $table->insert($user1);
         
         $condition = array(
-            "name" => "Marston"
+            "id" => 1,
+            "name" => "Doe"
         );
 
         //$entries = $table->select($condition);
         //print_r($entries);
 
-        $table->delete($condition);
+        //$table->delete($condition);
+        $table->update($condition);
+
         $entries = $table->select(null);
         print_r($entries);
 
