@@ -56,7 +56,6 @@
             if ($this->getTableIndexByName($name) == -1) {
                 $table = new Table($name, $scheme);
                 $this->tables[] = $table;
-                print_r($this->tables);
                 return $table;
             } else {
                 // Throw Error
@@ -68,7 +67,6 @@
             $index = $this->getTableIndexByName($name);
             if ($index != -1) {
                 array_splice($this->tables, $index, 1);
-                print_r($this->tables);
                 return true;
             } else {
                 // Throw Error
@@ -96,28 +94,45 @@
         
         private $name;
         private $scheme;
-        private $fields;
+        private $entries;
 
         function __construct($name, $scheme) {
             $this->name = $name;
             $this->scheme = $scheme;
-            $this->fields = array();
+            $this->entries = array();
         }
 
-        function select() {
-
+        function select($condition) {
+            if (is_null($condition)) {
+                return $this->entries;
+            }
+            $result = array();
+            foreach ($this->entries as $entry) {
+                $isApplies = true;
+                $instance = $entry->getInstance();
+                foreach ($condition as $key => $value) {
+                    if ($instance[$key] != $condition[$key]) {
+                        $isApplies = false;
+                        break;
+                    }
+                }
+                if ($isApplies) {
+                    $result[] = $entry;
+                }
+            }
+            return $result;
         }
 
         function insert($object) {
-
+            $this->entries[] = new Entry($this->scheme, $object);
         }
 
-        function update() {
-
+        function update($index, $object) {
+            
         }
 
-        function delete() {
-
+        function delete($condition) {
+            
         }
 
         function getName() {
@@ -127,6 +142,19 @@
     }
 
     class Entry {
+
+        private $instance;
+
+        function __construct($scheme, $object) {
+            $instance = array();
+            foreach ($scheme as $key => $value) {
+                $this->instance[$key] = ((array)$object)[$key];
+            }
+        }
+
+        function getInstance() {
+            return $this->instance;
+        }
 
     }
 

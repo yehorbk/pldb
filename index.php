@@ -19,6 +19,31 @@
             "name" => "text"
         );
         $table = $database->createTable('users', $sheme);
+
+        class User {
+            public $id;
+            public $name;
+        }
+        $user = new User();
+        $user->id = 0;
+        $user->name = "John";
+
+        $user1 = array(
+            "id" => 0,
+            "name" => "Marston"
+        );
+
+        $table->insert($user);
+        $table->insert($user1);
+        
+        $condition = array(
+            "id" => 0
+        );
+
+        $entries = $table->select($condition);
+        print_r($entries);
+
+        //$table->select($condition);
         //$database = new Database("plsql-test");
         // $result = $database->sendQuery("CREATE DATABASE `users`");
     ?>
