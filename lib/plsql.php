@@ -12,7 +12,6 @@
             if ($this->getDatabaseIndexByName($name) == -1) {
                 $database = new Database($name);
                 $this->databases[] = $database;
-                print_r($this->databases);
                 return $database;
             } else {
                 // Throw Error
@@ -29,7 +28,6 @@
                 // Throw Error
                 echo "There is no such database";
             }
-            print_r($this->databases);
         }
 
         private function getDatabaseIndexByName($name) {
@@ -55,15 +53,41 @@
         }
 
         function createTable($name, $scheme) {
-            $this->tables[] = new Table($name, $scheme);
+            if ($this->getTableIndexByName($name) == -1) {
+                $table = new Table($name, $scheme);
+                $this->tables[] = $table;
+                print_r($this->tables);
+                return $table;
+            } else {
+                // Throw Error
+                echo "Table already exists!";
+            }
         }
 
         function dropTable($name) {
-
+            $index = $this->getTableIndexByName($name);
+            if ($index != -1) {
+                array_splice($this->tables, $index, 1);
+                print_r($this->tables);
+                return true;
+            } else {
+                // Throw Error
+                echo "There is no such table";
+            }
         }
 
         function getName() {
             return $this->name;
+        }
+
+        private function getTableIndexByName($name) {
+            for ($i = 0; $i < count($this->tables); $i++) {
+                $item = $this->tables[$i];
+                if ($item->getName() == $name) {
+                    return $i;
+                }
+            }
+            return -1;
         }
 
     }
@@ -94,6 +118,10 @@
 
         function delete() {
 
+        }
+
+        function getName() {
+            return $this->name;
         }
 
     }
