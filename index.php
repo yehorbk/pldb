@@ -37,10 +37,14 @@
         $table->insert($user1);
         
         $condition = array(
-            "id" => 0
+            "name" => "Marston"
         );
 
-        $entries = $table->select($condition);
+        //$entries = $table->select($condition);
+        //print_r($entries);
+
+        $table->delete($condition);
+        $entries = $table->select(null);
         print_r($entries);
 
         //$table->select($condition);

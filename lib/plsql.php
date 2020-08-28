@@ -42,6 +42,10 @@
 
     }
 
+?>
+
+<?php
+
     class Database {
 
         private $name;
@@ -90,6 +94,10 @@
 
     }
 
+?>
+
+<?php
+
     class Table {
         
         private $name;
@@ -132,7 +140,22 @@
         }
 
         function delete($condition) {
-            
+            if (is_null($condition)) {
+                array_splice($this->entries, 0, count($this->entries));
+            }
+            foreach ($this->entries as $index => $entry) {
+                $isApplies = true;
+                $instance = $entry->getInstance();
+                foreach ($condition as $key => $value) {
+                    if ($instance[$key] != $condition[$key]) {
+                        $isApplies = false;
+                        break;
+                    }
+                }
+                if ($isApplies) {
+                    unset($this->entries[$index]);
+                }
+            }            
         }
 
         function getName() {
@@ -140,6 +163,10 @@
         }
 
     }
+
+?>
+
+<?php
 
     class Entry {
 
