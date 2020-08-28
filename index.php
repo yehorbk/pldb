@@ -14,12 +14,13 @@
     <?php
         $plsql = new PLSQL();
         $database = $plsql->createDatabase('plsql-test');
-        $sheme = array(
+        $database = $plsql->dropDatabase('plsql-test');
+        /*$sheme = array(
             "id" => "int",
             "name" => "text"
         );
         $table = $database->createTable('users', $sheme);
-        $database = $plsql->insert('table', $object);
+        $database = $plsql->insert('table', $object);*/
         //$database = new Database("plsql-test");
         // $result = $database->sendQuery("CREATE DATABASE `users`");
     ?>
