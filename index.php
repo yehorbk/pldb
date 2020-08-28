@@ -1,6 +1,7 @@
 <?php
-    include_once("plsql.php");
+    include_once("lib/plsql.php");
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,13 +12,16 @@
 </head>
 <body>
     <?php
-
-        $result = sendQuery("CREATE DATABASE `users`");
-
-        /*$result = sendQuery("
-        USE `Products`;
-        SELECT * FROM `SmartPhones`;
-        ");*/
-    ?> 
+        $plsql = new PLSQL();
+        $database = $plsql->createDatabase('plsql-test');
+        $sheme = array(
+            "id" => "int",
+            "name" => "text"
+        );
+        $table = $database->createTable('users', $sheme);
+        $database = $plsql->insert('table', $object);
+        //$database = new Database("plsql-test");
+        // $result = $database->sendQuery("CREATE DATABASE `users`");
+    ?>
 </body>
 </html>
