@@ -33,6 +33,14 @@
             }
         }
 
+        public function getDatabasesNames() {
+            $result = array();
+            foreach ($this->databases as $database) {
+                $result[] = $database->getName();
+            }
+            return $result;
+        }
+
         public function selectDatabase($name) {
             $index = $this->getDatabaseIndexByName($name);
             if ($index != -1) {
@@ -64,8 +72,12 @@
             $file = fopen($path, "r") or die(PLSQLException::CANNOT_OPEN_FILE);
             $content = fread($file, filesize($path));
             $database = Database::parseArray((array)json_decode($content));
-            $this->databases[] = $database;
-            return $database;
+            if ($this->getDatabaseIndexByName($database->getName()) == -1) {
+                $this->databases[] = $database;
+                return $database;
+            } else {
+                throw new Exception(PLSQLException::DATABASE_EXISTS);
+            }
         }
 
         private function createDatabasesFolder() {
@@ -116,6 +128,14 @@
             } else {
                 throw new Exception(PLSQLException::TABLE_EXISTS);
             }
+        }
+
+        public function getTablesNames() {
+            $result = array();
+            foreach ($this->tables as $table) {
+                $result[] = $table->getName();
+            }
+            return $result;
         }
 
         public function selectTable($name) {

@@ -13,46 +13,7 @@
 <body>
     <?php
         $plsql = new PLSQL();
-        //print_r($plsql->loadDatabase("db/plsql-test.db.json"));
-        //$plsql->dropDatabase("plsql-test");
-        $database = $plsql->createDatabase('plsql-test');
-        $sheme = array(
-            "name" => "text"
-        );
-        $table = $database->createTable('users', $sheme);
-
-        class User {
-            public $name;
-        }
-        $user = new User();
-        $user->name = "John";
-
-        $user1 = array(
-            "name" => "Marston"
-        );
-
-        $table->insert($user);
-        $table->insert($user1);
-        
-        $condition = array(
-            "id" => 1,
-            "name" => "Doe"
-        );
-
-        //$entries = $table->select($condition);
-        //print_r($entries);
-
-        //$table->delete($condition);
-        $table->update($condition);
-
-        $entries = $table->select(null);
-        //print_r($entries);
-        $database->dropTable("users");
-        $plsql->saveDatabase($database);
-
-        //$table->select($condition);
-        //$database = new Database("plsql-test");
-        // $result = $database->sendQuery("CREATE DATABASE `users`");
+        $plsql->loadDatabase("db/plsql-test.db.json");
     ?>
 </body>
 </html>
