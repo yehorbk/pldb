@@ -13,6 +13,8 @@
 <body>
     <?php
         $plsql = new PLSQL();
+        //print_r($plsql->loadDatabase("db/plsql-test.db.json"));
+        //$plsql->dropDatabase("plsql-test");
         $database = $plsql->createDatabase('plsql-test');
         $sheme = array(
             "name" => "text"
@@ -44,7 +46,9 @@
         $table->update($condition);
 
         $entries = $table->select(null);
-        print_r($entries);
+        //print_r($entries);
+        $database->dropTable("users");
+        $plsql->saveDatabase($database);
 
         //$table->select($condition);
         //$database = new Database("plsql-test");
