@@ -1,6 +1,6 @@
 <?php
 
-    class PLSQLException {
+    class PLDBException {
         const DATABASE_EXISTS = "Database already exists!";
         const NO_DATABASE_FOUND = "There is no such database!";
         const TABLE_EXISTS = "Table already exists!";
@@ -8,29 +8,23 @@
         const CANNOT_OPEN_FILE = "Cannot open file!";
     }
 
+    class PLDBConfiguration {
+        const DATABASES_FOLDER = "db";
+        const DATABASE_TYPE = "db.json";
+    }
+
 ?>
 
 
 <?php
 
-    class PLSQL {
+    class PLDB {
 
         private $databases;
 
         public function __construct() {
             $this->databases = array();
             $this->createDatabasesFolder();
-        }
-
-        public function createDatabase($name) {
-            if ($this->getDatabaseIndexByName($name) == -1) {
-                $database = new Database($name);
-                $this->databases[] = $database;
-                $this->saveDatabase($database);
-                return $database;
-            } else {
-                throw new Exception(PLSQLException::DATABASE_EXISTS);
-            }
         }
 
         public function getDatabasesNames() {
@@ -46,7 +40,18 @@
             if ($index != -1) {
                 return $this->databases[$index];
             } else {
-                throw new Exception(PLSQLException::NO_DATABASE_FOUND);
+                throw new Exception(PLDBException::NO_DATABASE_FOUND);
+            }
+        }
+
+        public function createDatabase($name) {
+            if ($this->getDatabaseIndexByName($name) == -1) {
+                $database = new Database($name);
+                $this->databases[] = $database;
+                $this->saveDatabase($database);
+                return $database;
+            } else {
+                throw new Exception(PLDBException::DATABASE_EXISTS);
             }
         }
 
@@ -57,40 +62,40 @@
                 unlink($this->prepareFilePath($name));
                 return true;
             } else {
-                throw new Exception(PLSQLException::NO_DATABASE_FOUND);
+                throw new Exception(PLDBException::NO_DATABASE_FOUND);
             }
         }
 
-        public function saveDatabase($database) {
-            $content = json_encode($database);
-            $file = fopen($this->prepareFilePath($database->getName()), "w") or die(PLSQLException::CANNOT_OPEN_FILE);
-            fwrite($file, $content);
-            fclose($file);
-        }
-
         public function loadDatabase($path) {
-            $file = fopen($path, "r") or die(PLSQLException::CANNOT_OPEN_FILE);
+            $file = fopen($path, "r") or die (PLDBException::CANNOT_OPEN_FILE);
             $content = fread($file, filesize($path));
             $database = Database::parseArray((array)json_decode($content));
             if ($this->getDatabaseIndexByName($database->getName()) == -1) {
                 $this->databases[] = $database;
                 return $database;
             } else {
-                throw new Exception(PLSQLException::DATABASE_EXISTS);
+                throw new Exception(PLDBException::DATABASE_EXISTS);
             }
+            fclose($file);
+        }
+
+        public function saveDatabase($database) {
+            $content = json_encode($database);
+            $file = fopen($this->prepareFilePath($database->getName()), "w") or
+                die (PLDBException::CANNOT_OPEN_FILE);
+            fwrite($file, $content);
+            fclose($file);
         }
 
         private function createDatabasesFolder() {
-            $path = "db";
-            if(!file_exists($path)) {
+            if(!file_exists(PLDBConfiguration::DATABASES_FOLDER)) {
                 mkdir($path, 0777, true);
             }
         }
 
         private function prepareFilePath($name) {
-            $path = "db";
-            $file = $name.".db.json";
-            return $path."/".$file;
+            $file = $name.".".PLDBConfiguration::DATABASE_TYPE;
+            return PLDBConfiguration::DATABASES_FOLDER."/".$file;
         }
 
         private function getDatabaseIndexByName($name) {
@@ -115,19 +120,22 @@
         private $name;
         private $tables;
 
+        public static function parseArray($array) {
+            $database = new Database($array["name"]);
+            $database->setTablesWithArray($array["tables"]);
+            return $database;
+        }
+
+        public function jsonSerialize() {
+            return [
+                "name" => $this->name,
+                "tables" => $this->tables,
+            ];
+        }
+
         public function __construct($name) {
             $this->name = $name;
             $this->tables = array();
-        }
-
-        public function createTable($name, $scheme) {
-            if ($this->getTableIndexByName($name) == -1) {
-                $table = new Table($name, $scheme);
-                $this->tables[] = $table;
-                return $table;
-            } else {
-                throw new Exception(PLSQLException::TABLE_EXISTS);
-            }
         }
 
         public function getTablesNames() {
@@ -143,7 +151,17 @@
             if ($index != -1) {
                 return $this->tables[$index];
             } else {
-                throw new Exception(PLSQLException::NO_TABLE_FOUND);
+                throw new Exception(PLDBException::NO_TABLE_FOUND);
+            }
+        }
+
+        public function createTable($name, $scheme) {
+            if ($this->getTableIndexByName($name) == -1) {
+                $table = new Table($name, $scheme);
+                $this->tables[] = $table;
+                return $table;
+            } else {
+                throw new Exception(PLDBException::TABLE_EXISTS);
             }
         }
 
@@ -153,7 +171,7 @@
                 array_splice($this->tables, $index, 1);
                 return true;
             } else {
-                throw new Exception(PLSQLException::NO_TABLE_FOUND);
+                throw new Exception(PLDBException::NO_TABLE_FOUND);
             }
         }
 
@@ -161,7 +179,7 @@
             return $this->name;
         }
 
-        protected function setTables($tablesArray) {
+        protected function setTablesWithArray($tablesArray) {
             $tables = array();
             foreach ($tablesArray as $value) {
                 $tables[] = Table::parseArray((array)$value);
@@ -179,19 +197,6 @@
             return -1;
         }
 
-        public static function parseArray($array) {
-            $database = new Database($array["name"]);
-            $database->setTables($array["tables"]);
-            return $database;
-        }
-
-        public function jsonSerialize() {
-            return [
-                "name" => $this->name,
-                "tables" => $this->tables,
-            ];
-        }
-
     }
 
 ?>
@@ -205,6 +210,22 @@
         private $scheme;
         private $index;
         private $entries;
+
+        public static function parseArray($array) {
+            $table = new Table($array["name"], $array["scheme"]);
+            $table->setIndex($array["index"]);
+            $table->setEntriesWithArray((array)$array["entries"]);
+            return $table;
+        }
+
+        public function jsonSerialize() {
+            return [
+                "name" => $this->name,
+                "scheme" => $this->scheme,
+                "index" => $this->index,
+                "entries" => $this->entries,
+            ];
+        }
 
         public function __construct($name, $scheme) {
             $this->name = $name;
@@ -235,19 +256,22 @@
         }
 
         public function insert($object) {
-            $this->entries[] = new Entry($this->scheme, $this->index, $object);
+            $this->entries[] = new Entry($this->scheme,
+                $this->index, $object);
             $this->index++;
         }
 
         public function update($object) {
             for ($i = 0; $i < count($this->entries); $i++) {
-                $instance = $this->entries[$i]->getInstance();
+                $instanceId = $this->entries[$i]->getInstance()["id"];
                 $objectId = ((array)$object)["id"];
-                if ($instance["id"] == $objectId) {
-                    $this->entries[$i] = new Entry($this->scheme, $objectId, $object);
-                    break;
+                if ($instanceId == $objectId) {
+                    $this->entries[$i] = new Entry($this->scheme,
+                        $objectId, $object);
+                    return true;
                 }
             }
+            return false;
         }
 
         public function delete($condition) {
@@ -277,28 +301,13 @@
             $this->index = $index;
         }
 
-        protected function setEntries($entriesArray) {
+        protected function setEntriesWithArray($entriesArray) {
             $entries = array();
-            foreach($entriesArray as $value) {
-                $entries[] = new Entry($this->scheme, $this->index, ((array)$value)["instance"]);
+            foreach ($entriesArray as $value) {
+                $entries[] = new Entry($this->scheme, $this->index,
+                    ((array)$value)["instance"]);
             }
             $this->entries = $entries;
-        }
-
-        public static function parseArray($array) {
-            $table = new Table($array['name'], $array['scheme']);
-            $table->setIndex($array['index']);
-            $table->setEntries((array)$array['entries']);
-            return $table;
-        }
-
-        public function jsonSerialize() {
-            return [
-                "name" => $this->name,
-                "scheme" => $this->scheme,
-                "index" => $this->index,
-                "entries" => $this->entries,
-            ];
         }
 
     }
@@ -312,9 +321,15 @@
 
         private $instance;
 
+        public function jsonSerialize() {
+            return [
+                "instance" => $this->instance
+            ];
+        }
+
         public function __construct($scheme, $index, $object) {
             $this->instance = array(
-                "id" => $index
+                "id" => $index,
             );
             foreach ($scheme as $key => $value) {
                 $this->instance[$key] = ((array)$object)[$key];
@@ -323,12 +338,6 @@
 
         public function getInstance() {
             return $this->instance;
-        }
-
-        public function jsonSerialize() {
-            return [
-                "instance" => $this->instance
-            ];
         }
 
     }
