@@ -224,3 +224,10 @@ Function returns the key-value array with the data.
 $data = $entry->getData();
 print_r($data);
 ```
+
+## PLDBException
+- `DATABASE_EXISTS = "Database already exists!"`
+- `NO_DATABASE_FOUND = "There is no such database!"`
+- `TABLE_EXISTS = "Table already exists!"`
+- `NO_TABLE_FOUND = "There is no such table!"`
+- `CANNOT_OPEN_FILE = "Cannot open file!"`
