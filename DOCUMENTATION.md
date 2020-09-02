@@ -26,6 +26,14 @@ $name = "foo-db";
 $database = $pldb->selectDatabase($name);
 ```
 
+### Inserting database
+Function requires a `Database` instance.
+
+`boolean PLDBService::insertDatabase($database)`
+```php
+$pldb->insertDatabase($database);
+```
+
 ### Creating database
 Function requires a database name and returns the `Database` instance.
 After function call the database will be created and written to file.
@@ -95,6 +103,14 @@ Function requires a table name and returns the `Table` instance.
 ```php
 $name = 'users';
 $table = $database->selectTable($name);
+```
+
+### Inserting table
+Function requires a `Table` instance.
+
+`boolean Database::insertTable($table)`
+```php
+$database->insertTable($table);
 ```
 
 ### Creating table
