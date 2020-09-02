@@ -5,7 +5,7 @@ A library that provides functionality for working with simple self-contained dat
 The main idea of the project is to allow programmers of any level to use the database for simple purposes without the need to install and configure it.
 
 # Installation
-Use Composer to install PLDB into your project:
+Use Composer to install `PLDB` into your project:
 ```
 $ composer require yehorbk/pldb
 ```
@@ -15,6 +15,9 @@ Here is a simple program that shows how to create database, create table, insert
 
 ```php
 <?php
+
+  require_once "vendor/autoload.php";
+  use PLDB\PLDBService;
 
   // Initializing PLDBService
   $pldb = new PLDBService();
