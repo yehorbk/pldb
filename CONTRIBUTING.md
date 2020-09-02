@@ -1,4 +1,4 @@
-# Cross-Term Contributing
+# PLDB Contributing
 
 Contributing requests are always welcome. Feel free to make issues or mail me to discuss features that you want to implement.
 
