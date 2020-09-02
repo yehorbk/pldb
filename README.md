@@ -66,4 +66,4 @@ Here is a simple program that shows how to create database, create table, insert
 For more information about library api - check the [docs](https://github.com/yehorbk/PLSQL/blob/master/DOCUMENTATION.md).
 
 # Author
-**Yehor Bublyk**: [GitHub](https://github.com/yehorbk) • [Twitter](https://twitter.com/thisisyehorbk)
+**Yehor Bublyk**: [GitHub](https://github.com/yehorbk) • [Twitter](https://twitter.com/yehorbk)
