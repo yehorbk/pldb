@@ -1,17 +1,17 @@
 # PLDB Documentation
 
-## PLDB
-`PLDB` it's the main class that provides functionality for database management.
+## PLDBService
+`PLDBService` it's the main class that provides functionality for database management.
 
-### Creating `PLDB` instance
+### Creating `PLDBService` instance
 ```php
-$pldb = new PLDB();
+$pldb = new PLDBService();
 ```
 
-### Getting list of databases names that connected to `PLDB`
+### Getting list of databases names that connected to `PLDBService`
 Function returns the array that consists of databases names.
 
-`array<string> PLDB::getDatabasesNames()`
+`array<string> PLDBService::getDatabasesNames()`
 ```php
 $databasesNames = $pldb->getDatabasesNames();
 print_r($databasesNames);
@@ -20,7 +20,7 @@ print_r($databasesNames);
 ### Selecting database
 Function requires a database name and returns the `Database` instance.
 
-`Database PLDB::selectDatabase($name)`
+`Database PLDBService::selectDatabase($name)`
 ```php
 $name = "foo-db";
 $database = $pldb->selectDatabase($name);
@@ -31,7 +31,7 @@ Function requires a database name and returns the `Database` instance.
 After function call the database will be created and written to file.
 Also it will be added to databases array in `PLDB` instance.
 
-`Database PLDB::createDatabase($name)`
+`Database PLDBService::createDatabase($name)`
 ```php
 $name = "foo-db";
 $database = $pldb->createDatabase($name);
@@ -40,7 +40,7 @@ $database = $pldb->createDatabase($name);
 ### Droping database
 After function call the database will be deleted from databases array and folder.
 
-`boolean PLDB::dropDatabase($name)`
+`boolean PLDBService::dropDatabase($name)`
 ```php
 $name = "foo-db";
 $pldb->dropDatabase($name);
@@ -50,7 +50,7 @@ $pldb->dropDatabase($name);
 Function requires a database file path and returns the `Database` instance.
 After loading, database will be added to databases array.
 
-`Database PLDB::loadDatabase($path)`
+`Database PLDBService::loadDatabase($path)`
 ```php
 $path = "db/foo-db";
 $database = $pldb->loadDatabase($path);
@@ -62,7 +62,7 @@ After function call the database file will be created in databases folder.
 
 Do not forget to save databases after changing them.
 
-`void PLDB::saveDatabase($database)`
+`void PLDBService::saveDatabase($database)`
 ```php
 $pldb->saveDatabase($database);
 ```
@@ -72,7 +72,7 @@ $pldb->saveDatabase($database);
 
 ### Creating `Database` instance
 Function requires a database name and returns the `Database` instance.
-Database will not be added to `PLDB` instanse instead of `PLDB::createDatabase` function.
+Database will not be added to `PLDBService` instanse instead of `PLDBService::createDatabase` function.
 
 ```php
 $name = "foo-db";
@@ -216,11 +216,11 @@ echo $name;
 ## Entry
 `Entry` class makes it easier to work with data in table.
 
-### Getting the data from instance
+### Getting the data from `Entry` instance
 Function returns the key-value array with the data.
 
-`array<string, string> Entry::getInstance()`
+`array<string, string> Entry::getData()`
 ```php
-$data = $entry->getInstance();
+$data = $entry->getData();
 print_r($data);
 ```

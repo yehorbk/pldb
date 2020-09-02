@@ -1,6 +1,7 @@
 {
     "name": "yehorbk/pldb",
-    "description": "A library for PHP that provides functionality for working with simple self-contained databases.",
+    "description": "A library that provides functionality for working with simple self-contained databases.",
+    "keywords": ["php", "library", "database", "self-contained"],
     "type": "library",
     "license": "MIT",
     "authors": [

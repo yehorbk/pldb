@@ -1,5 +1,6 @@
 # Composer Files
 /vendor/
+composer.lock
 
 # Temp files
 db
