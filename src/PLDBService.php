@@ -35,6 +35,15 @@
             }
         }
 
+        public function insertDatabase($database) {
+            if ($database instanceof Database) {
+                $this->databases[] = $database;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         public function createDatabase($name) {
             if ($this->getDatabaseIndexByName($name) == -1) {
                 $database = new Database($name);
@@ -80,7 +89,7 @@
 
         private function createDatabasesFolder() {
             if(!file_exists(PLDBConfiguration::DATABASES_FOLDER)) {
-                mkdir($path, 0777, true);
+                mkdir(PLDBConfiguration::DATABASES_FOLDER, 0777, true);
             }
         }
 

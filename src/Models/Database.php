@@ -38,6 +38,15 @@
             }
         }
 
+        public function insertTable($table) {
+            if ($table instanceof Table) {
+                $this->tables[] = $table;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         public function createTable($name, $scheme) {
             if ($this->getTableIndexByName($name) == -1) {
                 $table = new Table($name, $scheme);
