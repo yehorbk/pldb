@@ -1,1 +1,8 @@
+# Composer Files
+/vendor/
+
+# Temp files
 db
+
+# Mac Specific Files
+.DS_Store

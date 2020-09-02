@@ -1,5 +1,7 @@
 <?php
-    include_once("lib/pldb.php");
+    require_once './vendor/autoload.php';
+    
+    use PLDB\PLDBService;
 ?>
 
 <!DOCTYPE html>
@@ -13,7 +15,7 @@
 <body>
     <?php
         // Initializing PLDB
-        $pldb = new PLDB();
+        $pldb = new PLDBService();
 
         // Creating Database
         $database = $pldb->createDatabase('pldb-gs');
