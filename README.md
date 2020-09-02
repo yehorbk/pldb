@@ -1,11 +1,13 @@
 # Pocket Lite Database
-A library that allows to use a simple database in project without installation.
+A library that provides functionality for working with simple self-contained databases.
+
+# Concept
+The main idea of the project is to allow programmers of any level to use the database for simple purposes without the need to install and configure it.
 
 # Installation
-Download ```pldb.php``` file and put it to the project folder.
-Then connect library to your project:
-```php
-include_once("pldb.php");
+Use Composer to install PLDB into your project:
+```
+$ composer require yehorbk/pldb
 ```
 
 # Getting Started
@@ -13,8 +15,9 @@ Here is a simple program that shows how to create database, create table, insert
 
 ```php
 <?php
-  // Initializing PLDB
-  $pldb = new PLDB();
+
+  // Initializing PLDBService
+  $pldb = new PLDBService();
 
   // Creating Database
   $database = $pldb->createDatabase('pldb-gs');
@@ -55,6 +58,7 @@ Here is a simple program that shows how to create database, create table, insert
   );
   $usersArray = $table->select($condition);
   print_r($usersArray);
+
 ?>
 ```
 
